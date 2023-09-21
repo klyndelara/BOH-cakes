@@ -1,5 +1,7 @@
-rollback;
-BEGIN TRANSACTION;
+DROP TABLE IF EXISTS cupcake;
+DROP TABLE IF EXISTS customer;
+DROP TABLE IF EXISTS sale;
+DROP TABLE IF EXISTS orders;
 
 
 
@@ -8,7 +10,8 @@ CREATE TABLE cupcake(
 	cupcake_id serial not null,
 	name varchar(50) not null,
 	description varchar(200) not null,
-	cost varchar not null
+	cost varchar not null,
+	CONSTRAINT pk_cupcake PRIMARY KEY (cupcake_id)
 );
 
 CREATE TABLE customer(
@@ -18,13 +21,15 @@ CREATE TABLE customer(
 	address varchar(50),
 	city varchar(25),
 	state varchar(2),
-	zipcode varchar (10)
+	zipcode varchar (10),
+	CONSTRAINT pk_customer PRIMARY KEY (customer_id)
 );
 
 CREATE TABLE sale(
 	sale_id serial not null,
 	sale_date date not null,
 	total_cost int not null
+	CONSTRAINT pk_sale PRIMARY KEY (sale_id)
 
 );
 
@@ -33,7 +38,12 @@ CREATE TABLE orders (
 	customer_id int not null,
 	sale_id int,
 	cupcake_id  int not null,
-	quantity int not null
+	quantity int not null,
+	CONSTRAINT fk_orders_cupcake FOREIGN KEY (cupcake_id) REFERENCES sale(cupcake_id),
+	CONSTRAINT fk_orders_customer FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+	CONSTRAINT fk_orders_sale FOREIGN KEY (sale_id) REFERENCES sale(sale_id),
+	
+	
 );
 	
 INSERT INTO cupcake(name, description, cost) VALUES 
